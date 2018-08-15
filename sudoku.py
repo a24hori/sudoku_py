@@ -1,6 +1,6 @@
 # 'sudoku.py' created by keith1994
 # 目的：数独を数理最適化手法で解く（pulpの動作テストおよび学習のためのプログラム程度で作成）
-# データ：81文字のテキストデータ（空欄は'.'とする）
+# データ：一行81文字の数独テキストデータ（空欄は'.'とする）
 # 変数 x[i][j][k] (i,j,k=1,...,9)：行i列jに数kを書き込むか否か（バイナリ変数）
 # ------------------------------------------------------------------------------
 
@@ -8,7 +8,7 @@
 import pulp
 
 # データセット（テストデータ）
-dataset = ".94...13..............76..2.8..1.....32.........2...6.....5.4.......8..7..63.4..8"
+dataset = "2..6..5...1.9..67...5......5.942.....4..8.7..3......5.7....6.3....2......2....1.9"
 # 一文字ずつリストとして格納する
 datalist = list(dataset)
 
@@ -24,12 +24,10 @@ K = range(0, 9)
 prob = pulp.LpProblem('Sudoku', pulp.LpMinimize)
 # 変数の宣言
 x = pulp.LpVariable.dicts("x", (I, J, K), 0, 1, pulp.LpInteger)
-# 目的関数（すべての変数の和が81となるかどうか）
-#prob += pulp.lpSum(x)
 
-# ボードリストの定義
-board = [[0 for i in I]for j in J]
-# 問題データをリシェイプしてボードリストboardに代入
+# 数独のボードを定義
+board = [[0 for i in I] for j in J]
+# データセット（81文字テキスト）をリシェイプしてボードリストboardに代入
 for i in I:
     for j in J:
         if datalist[9*i+j] in numset:
@@ -48,7 +46,7 @@ for i in I:
         if str(board[i][j]) in numset:
             prob += x[i][j][board[i][j]-1] == 1
 
-# (i,j)成分にひとつある値kが入る
+# (i,j)成分には数字がひとつ入る
 for i in I:
     for j in J:
         prob += pulp.lpSum([x[i][j][k] for k in K]) == 1
@@ -79,6 +77,7 @@ for i in I:
         for k in K:
             if x[i][j][k].value() == 1:
                 print("%2d" % (k+1), end='')
+                break
     print()
 
 # END program
