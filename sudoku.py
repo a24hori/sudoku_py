@@ -40,7 +40,7 @@ print("+++ Problem data +++")
 for i in I:
     for j in J:
         print("%2d" % board[i][j], end='')
-    print('\n')
+    print()
 
 # 所与の値は固定する
 for i in I:
@@ -79,6 +79,6 @@ for i in I:
         for k in K:
             if x[i][j][k].value() == 1:
                 print("%2d" % (k+1), end='')
-    print('\n')
+    print()
 
 # END program
